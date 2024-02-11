@@ -1,0 +1,54 @@
+#!/bin/bash
+
+list_flags="-Si"
+action_flags="-S"
+placeholder="Install package ..."
+success="Installed"
+failure="Failed to install"
+
+open_url_kbd="Control+o"
+
+while getopts ":r" Option; do
+  case $Option in
+    r)
+      list_flags="-Qi"
+      action_flags="-R"
+      placeholder="Remove package ..."
+      success="Removed"
+      failure="Failed to remove"
+      ;;
+    *) ;;
+  esac done
+
+awk_str='
+/^Name/{name=$2}
+/^Description/{description=$2}
+/^Download Size/{size=$2" →"}
+/^Installed Size/{size_i=$2;
+print name, "「 "size, size_i" 」", description}'
+
+open_url() {
+  pacman -Si "$1" | awk -F ' : ' '/^URL/{print $2}' | xargs xdg-open
+}
+
+notify() {
+  which say && say "$1" || notify-send "$1"
+}
+
+entry=$(pacman "$list_flags" | awk -F ' : ' "$awk_str" | sort -d | \
+  rofi -dmenu -i -theme-str "#entry { placeholder: \"$placeholder\"; }" \
+  -kb-custom-1 "$open_url_kbd")
+
+rofi_exit=$?
+
+[ $rofi_exit -eq 1 ] && exit
+
+pkg=$(echo "$entry" | awk '{print $1}')
+
+case $rofi_exit in
+  10) open_url "$pkg" ;;
+  *) sudo pacman "$action_flags" --noconfirm "$pkg" &&
+       notify "$success 📦 $pkg" || notify "$failure📦 $pkg" ;;
+esac
+
+exit 0
