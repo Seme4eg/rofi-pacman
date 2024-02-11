@@ -28,7 +28,7 @@ awk_str='
 print name, "「 "size, size_i" 」", description}'
 
 open_url() {
-  pacman -Si "$1" | awk -F ' : ' '/^URL/{print $2}' | xargs xdg-open
+  pacman "$list_flags" "$1" | awk -F ' : ' '/^URL/{print $2}' | xargs xdg-open
 }
 
 notify() {
