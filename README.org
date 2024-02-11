@@ -1,13 +1,13 @@
 #+title: Rofi-pacman
 
-Super simple rofi script to install pacmages from pacman (only, no AUR) and
+Super simple rofi script to install packages from pacman (only, no AUR) and
 remove local packages (including AUR ones).
 
 To remove package, pass ~-r~ flag to the script.
 
 A feature I personally found useful to have is *opeing package URL*,
 which you can do with =Ctrl+o= default binding (feel free to change it in the
-script manually, no config file needed.)
+script manually, no config file needed).
 
 [[assets/install.png]]
 
