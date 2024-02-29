@@ -18,7 +18,8 @@ while getopts ":r" Option; do
       failure="Failed to remove"
       ;;
     *) ;;
-  esac done
+  esac
+done
 
 awk_str='
 /^Name/{name=$2}
@@ -35,9 +36,9 @@ notify() {
   which say && say "$1" || notify-send "$1"
 }
 
-entry=$(pacman "$list_flags" | awk -F ' : ' "$awk_str" | sort -d | \
+entry=$(pacman "$list_flags" | awk -F ' : ' "$awk_str" | sort -d |
   rofi -dmenu -i -theme-str "#entry { placeholder: \"$placeholder\"; }" \
-  -kb-custom-1 "$open_url_kbd")
+    -kb-custom-1 "$open_url_kbd")
 
 rofi_exit=$?
 
@@ -47,8 +48,13 @@ pkg=$(echo "$entry" | awk '{print $1}')
 
 case $rofi_exit in
   10) open_url "$pkg" ;;
-  *) sudo pacman "$action_flags" --noconfirm "$pkg" &&
-       notify "$success 📦 $pkg" || notify "$failure📦 $pkg" ;;
+  *)
+    if sudo pacman "$action_flags" --noconfirm "$pkg"; then
+      notify "$success 📦 $pkg"
+    else
+      notify "$failure📦 $pkg"
+    fi
+    ;;
 esac
 
 exit 0
