@@ -5,6 +5,9 @@ remove local packages (including AUR ones).
 
 To remove package, pass ~-r~ flag to the script.
 
+To search package with regex, pass ~-R~ flag to the script, default is just a
+fuzzy search.
+
 A feature I personally found useful to have is *opeing package URL*,
 which you can do with =Ctrl+o= default binding (feel free to change it in the
 script manually, no config file needed).
