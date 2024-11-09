@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/sh
 
 list_flags="-Si"
 action_flags="-S"
 placeholder="Install package ..."
 success="Installed"
 failure="Failed to install"
-extra_args=()
+extra_args=""
 
 open_url_kbd="Control+o"
 
@@ -19,7 +19,7 @@ while getopts ":rR" Option; do
       failure="Failed to remove"
       ;;
     R) # search with regexp
-      extra_args+=(-matching regex)
+      extra_args="-matching regex"
       placeholder="Install package (regex search) ..."
       ;;
     *) ;;
@@ -44,8 +44,9 @@ notify() {
 }
 
 entry=$(
+  # shellcheck disable=SC2086
   pacman "$list_flags" | awk -F ' : ' "$awk_str" | sort -d |
-    rofi -dmenu "${extra_args[@]}" -i \
+    rofi -dmenu $extra_args -i \
       -theme-str "#entry { placeholder: \"$placeholder\"; }" \
       -kb-custom-1 "$open_url_kbd"
 )
