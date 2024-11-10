@@ -13,7 +13,7 @@ while getopts ":rR" Option; do
   case $Option in
     r) # remove package
       list_flags="-Qi"
-      action_flags="-R"
+      action_flags="-Rns"
       placeholder="Remove package ..."
       success="Removed"
       failure="Failed to remove"
