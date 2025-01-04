@@ -63,7 +63,7 @@ case $rofi_exit in
     if sudo pacman "$action_flags" --noconfirm "$pkg"; then
       notify "$success 📦 $pkg"
     else
-      notify "$failure📦 $pkg"
+      notify "$failure 📦 $pkg"
     fi
     ;;
 esac
