@@ -7,7 +7,7 @@ success="Installed"
 failure="Failed to install"
 extra_args=""
 
-open_url_kbd="Control+o"
+kb_open_url="Control+o"
 
 while getopts ":rR" Option; do
   case $Option in
@@ -47,8 +47,9 @@ entry=$(
   # shellcheck disable=SC2086
   pacman "$list_flags" | awk -F ' : ' "$awk_str" | sort -d |
     rofi -dmenu $extra_args -i \
+      -mesg "$kb_open_url - Open package url" \
       -theme-str "#entry { placeholder: \"$placeholder\"; }" \
-      -kb-custom-1 "$open_url_kbd"
+      -kb-custom-1 "$kb_open_url"
 )
 
 rofi_exit=$?
