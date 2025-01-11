@@ -2,25 +2,20 @@
 
 list_flags="-Si"
 action_flags="-S"
-placeholder="Install package ..."
+placeholder="Install package (supports regex) ..."
 success="Installed"
 failure="Failed to install"
-extra_args=""
 
 kb_open_url="Control+o"
 
-while getopts ":rR" Option; do
+while getopts ":r" Option; do
   case $Option in
     r) # remove package
       list_flags="-Qi"
       action_flags="-Rns"
-      placeholder="Remove package ..."
+      placeholder="Remove package (supports regex) ..."
       success="Removed"
       failure="Failed to remove"
-      ;;
-    R) # search with regexp
-      extra_args="-matching regex"
-      placeholder="Install package (regex search) ..."
       ;;
     *) ;;
   esac
@@ -46,7 +41,7 @@ notify() {
 entry=$(
   # shellcheck disable=SC2086
   pacman "$list_flags" | awk -F ' : ' "$awk_str" | sort -d |
-    rofi -dmenu $extra_args -i \
+    rofi -dmenu -matching regex -i \
       -mesg "$kb_open_url - Open package url" \
       -theme-str "#entry { placeholder: \"$placeholder\"; }" \
       -kb-custom-1 "$kb_open_url"
